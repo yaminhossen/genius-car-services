@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import auth from '../../../../firebase.init';
+import SocialLogin from '../../SocialLogin/SocialLogin';
 
 const Register = () => {
+    const [agree, setAgree] = useState(false);
     const [
         createUserWithEmailAndPassword,
         user,
@@ -23,7 +25,11 @@ const Register = () => {
         const name = event.target.name.value;
         const email = event.target.email.value;
         const password = event.target.password.value;
-        createUserWithEmailAndPassword(email, password)
+        // const agree = event.target.terms.checked;
+        if (agree) {
+            createUserWithEmailAndPassword(email, password);
+        }
+
     }
     return (
         <div className='text-center '>
@@ -38,9 +44,14 @@ const Register = () => {
                 <input type="password" name="password" id="" placeholder='password' required />
                 <br />
                 <br />
-                <input type="submit" value="Register" />
+                <input onClick={() => setAgree(!agree)} type="checkbox" name="terms" id="terms" />
+                <label className={agree ? 'text-primary' : 'text-danger'} htmlFor="terms">Accept term and condition</label>
+                <br />
+                <br />
+                <input disabled={!agree} type="submit" value="Register" />
             </form>
             <p>Allready have an account? <Link to="/login" className='text-primary text-decoration-none' onClick={navegateLogin}>Please Login</Link></p>
+            <SocialLogin></SocialLogin>
         </div>
     );
 };
